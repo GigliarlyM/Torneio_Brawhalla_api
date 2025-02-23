@@ -38,5 +38,5 @@ classDiagram
     }
     Time "1" -- "*" Jogador : jogadores
     Time "1" -- "1" Diretor : diretor
-    Time "1" -- "1" Torneio : torneioCadastrado
+    Time "*" -- "1" Torneio : torneio
 ```
