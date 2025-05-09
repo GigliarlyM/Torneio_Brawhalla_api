@@ -9,7 +9,7 @@ spring:
     username: gigla2025
     password:
   jpa:
-    show-sql: true
+    show-sql: false
     open-in-view: false
     hibernate:
       ddl-auto: create # validate | update | create | create-drop

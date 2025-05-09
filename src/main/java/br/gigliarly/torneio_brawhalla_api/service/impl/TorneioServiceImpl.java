@@ -24,8 +24,8 @@ public class TorneioServiceImpl implements TorneioService {
         if (id == null) {
             throw new BusinessException("Id não pode ser nulo");
         }
-        if (torneioRepository.existsById(id)) {
-            throw new BusinessException("Esse id não existe");
+        if (!torneioRepository.existsById(id)) {
+            throw new BusinessException("Esse id torneio não existe");
         }
 
         return torneioRepository.findById(id).orElseThrow(NoSuchElementException::new);
