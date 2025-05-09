@@ -1,12 +1,16 @@
 package br.gigliarly.torneio_brawhalla_api.service;
 
+import br.gigliarly.torneio_brawhalla_api.dto.TorneioDTO;
 import br.gigliarly.torneio_brawhalla_api.entity.Torneio;
-import br.gigliarly.torneio_brawhalla_api.entity.summary.TorneioResumido;
 
 public interface TorneioService {
 
     Torneio findById(Long id);
 
-    TorneioResumido getTorneioResumido(Long id);
+    Torneio save(TorneioDTO torneioDTO);
+
+    void deleteById(Long id);
+
+    Torneio update(Long id, TorneioDTO torneioDTO);
 
 }

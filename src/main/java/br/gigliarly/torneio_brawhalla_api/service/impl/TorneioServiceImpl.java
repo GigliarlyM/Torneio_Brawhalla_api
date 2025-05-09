@@ -1,8 +1,7 @@
 package br.gigliarly.torneio_brawhalla_api.service.impl;
 
+import br.gigliarly.torneio_brawhalla_api.dto.TorneioDTO;
 import br.gigliarly.torneio_brawhalla_api.entity.Torneio;
-import br.gigliarly.torneio_brawhalla_api.entity.summary.TimeResumido;
-import br.gigliarly.torneio_brawhalla_api.entity.summary.TorneioResumido;
 import br.gigliarly.torneio_brawhalla_api.exception.BusinessException;
 import br.gigliarly.torneio_brawhalla_api.repository.TorneioRepository;
 import br.gigliarly.torneio_brawhalla_api.service.TimeService;
@@ -10,17 +9,14 @@ import br.gigliarly.torneio_brawhalla_api.service.TorneioService;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 @Service
 public class TorneioServiceImpl implements TorneioService {
 
     private final TorneioRepository torneioRepository;
-    private final TimeService timeService;
 
-    public TorneioServiceImpl(TorneioRepository torneioRepository, TimeService timeService) {
+    public TorneioServiceImpl(TorneioRepository torneioRepository) {
         this.torneioRepository = torneioRepository;
-        this.timeService = timeService;
     }
 
     @Override
@@ -28,40 +24,38 @@ public class TorneioServiceImpl implements TorneioService {
         if (id == null) {
             throw new BusinessException("Id não pode ser nulo");
         }
+        if (torneioRepository.existsById(id)) {
+            throw new BusinessException("Esse id não existe");
+        }
 
         return torneioRepository.findById(id).orElseThrow(NoSuchElementException::new);
     }
 
-    /* A meta eh receber uma reposta que eh agrupada pelos dados do torneio
-     *  e retornar agrupado, junto dessa requisicao, o nomes e apelidos dos times
-     * que estao participando desse torneio */
     @Override
-    public TorneioResumido getTorneioResumido(Long id) {
+    public Torneio save(TorneioDTO torneioDTO) {
+        return torneioRepository.save(torneioDTO.toEntity());
+    }
+
+    @Override
+    public void deleteById(Long id) {
         if (id == null) {
             throw new BusinessException("Id não pode ser nulo");
         }
 
-        var torneio = this.findById(id);
-        var listTime = timeService.findAll();
-        var timesResumido = listTime.stream()
-                .filter(time -> Objects.equals(time.getTorneio().getId(), id))
-                .map(time -> new TimeResumido(
-                        time.getId(),
-                        time.getNome(),
-                        time.getApto(),
-                        time.getConfirIntegrantes(),
-                        time.getNacionalidade()
-                )).toList();
+        if (torneioRepository.existsById(id)) {
+            throw new BusinessException("Esse id não existe");
+        }
 
-
-        return new TorneioResumido(
-                torneio.getId(),
-                torneio.getTitulo(),
-                torneio.getDataInicio(),
-                torneio.getEstado(),
-                torneio.getCidade(),
-                torneio.getConcluido(),
-                timesResumido
-        );
+        torneioRepository.deleteById(id);
     }
+
+    @Override
+    public Torneio update(Long id, TorneioDTO torneioDTO) {
+        Torneio torneio = this.findById(id);
+        Torneio result = torneioDTO.toEntity();
+        result.setId(torneio.getId());
+
+        return torneioRepository.save(result);
+    }
+
 }

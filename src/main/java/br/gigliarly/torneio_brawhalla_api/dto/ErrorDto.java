@@ -1,4 +1,4 @@
-package br.gigliarly.torneio_brawhalla_api.controller.dto;
+package br.gigliarly.torneio_brawhalla_api.dto;
 
 public class ErrorDto {
     private String message;

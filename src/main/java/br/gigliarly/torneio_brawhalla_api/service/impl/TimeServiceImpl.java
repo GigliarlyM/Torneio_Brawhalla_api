@@ -1,5 +1,6 @@
 package br.gigliarly.torneio_brawhalla_api.service.impl;
 
+import br.gigliarly.torneio_brawhalla_api.dto.TimeDto;
 import br.gigliarly.torneio_brawhalla_api.entity.Time;
 import br.gigliarly.torneio_brawhalla_api.exception.BusinessException;
 import br.gigliarly.torneio_brawhalla_api.repository.TimeRepository;
@@ -18,22 +19,30 @@ public class TimeServiceImpl implements TimeService {
         this.timeRepository = timeRepository;
     }
 
+    private void verifyId(Long id) {
+        if (id == null) {
+            throw new BusinessException("Id nao  pode ser nulo");
+        }
+
+        if (!timeRepository.existsById(id)) {
+            throw new BusinessException("Esse id nao existe");
+        }
+    }
+
     @Override
     public Time findById(Long id) {
-        if (id == null) {
-            throw new BusinessException("Id não pode ser nulo");
-        }
+        verifyId(id);
 
         return this.timeRepository.findById(id).orElseThrow(NoSuchElementException::new);
     }
 
     @Override
-    public Time save(Time time) {
-        if (time.getId() != null && timeRepository.existsById(time.getId())) {
-            throw new BusinessException("Id already exists");
+    public Time save(TimeDto time) {
+        if (timeRepository.existsByNome(time.nome())) {
+            throw new BusinessException("Esse nome de time ja existe");
         }
 
-        return timeRepository.save(time);
+        return timeRepository.save(time.toEntity());
     }
 
     @Override
@@ -42,23 +51,23 @@ public class TimeServiceImpl implements TimeService {
     }
 
     @Override
-    public Time update(Long id, Time time) {
-        Time dbTime = this.findById(id);
+    public Time update(Long id, TimeDto timeDto) {
+        verifyId(id);
+        Time time = this.findById(id);
+        Time result = timeDto.toEntity();
+        result.setId(time.getId());
 
-        if (dbTime.getId().equals(time.getId())) {
-            throw new BusinessException("Ids do time não coincidem");
-        }
-
-        dbTime.setNome(time.getNome());
-        dbTime.setApto(time.getApto());
-
-        return this.timeRepository.save(dbTime);
+        return timeRepository.save(result);
     }
 
     @Override
     public void deleteById(Long id) {
         if (id == null) {
             throw new BusinessException("Id não pode ser nulo");
+        }
+
+        if (!timeRepository.existsById(id)) {
+            throw new BusinessException("Esse time não existe");
         }
 
         timeRepository.deleteById(id);

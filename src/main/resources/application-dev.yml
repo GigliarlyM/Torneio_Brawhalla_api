@@ -1,6 +1,7 @@
 springdoc:
   swagger-ui:
-    path: /swagger
+    path: /swagger-ui
+    enabled: true
 
 spring:
   datasource:

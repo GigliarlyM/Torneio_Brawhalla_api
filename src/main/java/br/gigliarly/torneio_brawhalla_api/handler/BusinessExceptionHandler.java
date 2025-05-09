@@ -1,6 +1,6 @@
 package br.gigliarly.torneio_brawhalla_api.handler;
 
-import br.gigliarly.torneio_brawhalla_api.controller.dto.ErrorDto;
+import br.gigliarly.torneio_brawhalla_api.dto.ErrorDto;
 import br.gigliarly.torneio_brawhalla_api.exception.BusinessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;

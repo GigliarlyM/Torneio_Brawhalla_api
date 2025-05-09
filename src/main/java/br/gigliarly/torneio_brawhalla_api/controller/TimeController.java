@@ -1,6 +1,6 @@
 package br.gigliarly.torneio_brawhalla_api.controller;
 
-import br.gigliarly.torneio_brawhalla_api.controller.dto.TimeDto;
+import br.gigliarly.torneio_brawhalla_api.dto.TimeDto;
 import br.gigliarly.torneio_brawhalla_api.entity.Time;
 import br.gigliarly.torneio_brawhalla_api.service.TimeService;
 import org.springframework.http.ResponseEntity;
@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("/time")
@@ -26,7 +25,7 @@ public class TimeController {
     }
 
     @PostMapping
-    public ResponseEntity<Time> create(@RequestBody Time time) {
+    public ResponseEntity<Time> create(@RequestBody TimeDto time) {
         var timeCreated = service.save(time);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
@@ -38,7 +37,7 @@ public class TimeController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Time> update(@PathVariable Long id, @RequestBody TimeDto time) {
-        var timeUpdated = service.update(id, time.toModel());
+        var timeUpdated = service.update(id, time);
         return ResponseEntity.ok().body(timeUpdated);
     }
 

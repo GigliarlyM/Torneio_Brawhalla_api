@@ -1,6 +1,6 @@
 # Projeto api para torneio de Brawhalla
 
-## Requisitos nao funcionais
+## Requisitos
 
 - Java 21
 - Spring Boot 3.4.3
